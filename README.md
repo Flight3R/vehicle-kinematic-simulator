@@ -10,6 +10,7 @@ C++
 * GearBox
 * TyreSet
 * Atmosphere
+* TestRun
 
 
 
@@ -59,13 +60,19 @@ C++
 
 
 
+**TestRun** posiada:
+
+* main
+
+
+
 ## Metody
 
 ### Position
 
-* calculatePosition	
-  * `speed`
-  * `deltaT`
+* calculatePosition
+  * `velocity`
+  * `timeDelta`
 
 ### Engine
 
