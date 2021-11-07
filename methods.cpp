@@ -22,5 +22,5 @@ void Car::calculateCurrentVelocity() {
 }
 
 float Atmosphere::calculateDrag(int velocity, float surfaceArea) {
-    f = (airDensity * velocity^3) / 2 * surfaceArea;
+    // f = (airDensity * velocity^3) / 2 * surfaceArea;
 }
