@@ -49,4 +49,7 @@ private:
 class Atmosphere {
 private:
     float airDensity;
+
+public:
+    void calculateDrag(float, int, float);
 };
