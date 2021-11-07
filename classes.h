@@ -15,6 +15,9 @@ private:
     GearBox *gearBox;
     TyreSet *tyreSet;
     Atmosphere *atmosphere;
+
+public:
+    void calculateCurrentSpeed();
 };
 
 
@@ -30,7 +33,11 @@ public:
 
 class Engine {
 private:
+    int RPM;
     vector<int> torqueMap;
+
+public:
+    float getTorque();
 };
 
 
