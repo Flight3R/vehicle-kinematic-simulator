@@ -55,7 +55,8 @@ private:
 
 class Atmosphere {
 private:
-    float airDensity;
+    int speed;
+    float surfaceArea;
 
 public:
     float calculateDrag(int, float);
