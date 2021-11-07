@@ -7,7 +7,7 @@ class Car {
 private:
     string name;
     int mass;
-    float speed;
+    float velocity;
     float surfaceArea;
 
     Position *position;
@@ -17,14 +17,13 @@ private:
     Atmosphere *atmosphere;
 
 public:
-    void calculateCurrentSpeed();
+    void calculateCurrentVelocity();
 };
 
 
 class Position {
 private:
-    float x;
-    float y;
+    float range;
 
 public:
     void calculatePosition(float, float);
@@ -35,9 +34,10 @@ class Engine {
 private:
     int RPM;
     vector<int> torqueMap;
+    float interpolateTorque();
 
-public:
-    float getTorque();
+public:    
+    float calculateCurrentPower();
 };
 
 
@@ -56,4 +56,7 @@ private:
 class Atmosphere {
 private:
     float airDensity;
+
+public:
+    float calculateDrag(int, float);
 };
