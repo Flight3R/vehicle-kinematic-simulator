@@ -23,39 +23,39 @@ C++
 * **Position**
 * **GearBox**
 * **TyreSet**
+* **Atmosphere**
 
 
 
-**Car** posiada
+**Car** posiada:
 
 * mass [kg]
+* surfaceArea [m^2]
 * currentSpeed [m/s]
 
 
 
-**TyreSet** posiada
+**TyreSet** posiada:
 
 * diameter
 
 
 
-**GearBox** posiada
+**GearBox** posiada:
 
 * ratioMap [przełożenie(obroty)]
 
 
 
-**Engine** posiada
+**Engine** posiada:
 
 * torqueMap [moment_siły(obroty)]
 
 
 
-**Atmosphere** posiada
+**Atmosphere** posiada:
 
 * airDensity [kg/m^3]
-
-
 
 
 
@@ -64,7 +64,7 @@ C++
 ### Position
 
 * calculatePosition
-  * `v`
+  * `speed`
   * `deltaT`
 
 ### Engine
@@ -82,9 +82,16 @@ C++
   * `ths->mass`
   * `this->currentSpeed`
 
+### Atmosphere
 
+* calculateDrag
+  * `this->airDensity`
+  * `speed`
+  * `surfaceArea`
 
 ## Wzorki
+
+### Silnik i moc
 
 $$
 \Delta E_k = E_{k1} - E_{k0} = \frac{1}{2}m(v_1^2-v_0^2)
@@ -94,17 +101,17 @@ P = \frac {\Delta E_k}{t}
 v_1 = \sqrt{\frac{2 P_e \cdot t}{m} + v_0^2}
 \\
 v_1 = \sqrt{\frac{2 \cdot P_e(obr) \cdot \Delta t}{m} + v_0^2}
-\\ 
-\\
+$$
+
+### Opory powietrza
+
+$$
 P_w = F_w \cdot v
 \\
 F_w = \frac{\rho_{atm} \cdot v^2}{2 S}
 \\
-\\
-v_1 = \sqrt{\frac{2 \cdot [P_e(obr) - P_w(v)] \cdot \Delta t}{m} + v_0^2}
-\\
-v_1 = \sqrt{\frac{2 \cdot [P_e(obr) - \frac{\rho_{atm} \cdot v^3}{2 S}] \cdot \Delta t}{m} + v_0^2}
-\\
 P_{effective} = P_e(obr) - \frac{\rho_{atm} \cdot v^3}{2 S} \ \ if >0 \ \ else \ \ 0
+\\
+v_1 = \sqrt{\frac{2 \cdot P_{effective}(obr,v) \cdot \Delta t}{m} + v_0^2}
 $$
 

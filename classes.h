@@ -8,6 +8,7 @@ private:
     string name;
     int mass;
     float speed;
+    float surfaceArea;
 
     Position *position;
     Engine *engine;
@@ -21,6 +22,9 @@ class Position {
 private:
     float x;
     float y;
+
+public:
+    void calculatePosition(float, float);
 };
 
 
