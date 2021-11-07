@@ -3,14 +3,6 @@
 #include <string>
 
 
-class TestRun {
-public:
-    float timeDelta = 0.01;
-
-    int test();
-};
-
-
 class Car {
 private:
     string name;
@@ -36,6 +28,8 @@ private:
     float range;
 
 public:
+    Position(float);
+
     float calculatePosition(float, float);
     void setRange(float);
 };
@@ -43,22 +37,35 @@ public:
 class Engine {
 private:
     int RPM;
+    int minRPM;
+    int maxRPM;
     vector<int> torqueMap;
 
     float interpolateTorque();
 
 public:    
+    Engine(int, int, int, vector<int>);
+
     float calculateCurrentPower();
+    float setRPM();
 };
 
 class GearBox {
 private:
     vector<int> ratioMap;
+
+public:
+    GearBox(vector<int>);
+
+    float calculateRPM(float, float);
 };
 
 class TyreSet {
 private:
     float diameter;
+
+public:
+    TyreSet(float);
 };
 
 class Atmosphere {
@@ -66,5 +73,7 @@ private:
     float airDensity;
 
 public:
+    Atmosphere(float);
+
     float calculateDrag(float, float);
 };
