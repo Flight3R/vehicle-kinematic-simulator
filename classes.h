@@ -48,8 +48,9 @@ private:
 
 class Atmosphere {
 private:
-    float airDensity;
+    int speed;
+    float surfaceArea;
 
 public:
-    void calculateDrag(float, int, float);
+    float calculateDrag(float, int, float);
 };
