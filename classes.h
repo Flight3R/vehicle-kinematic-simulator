@@ -15,7 +15,7 @@ private:
     float interpolateTorque();
 
 public:
-    Engine(const int&, const int&, const int&, const std::vector<float>&);
+    Engine(const int&, const int&, const int&, std::vector<float>&&);
     Engine(const Engine&&);
     Engine(const Engine&) = delete;
 
@@ -42,14 +42,20 @@ public:
  ************************************/
 class GearBox {
 private:
-    std::vector<int> ratioMap;
+    std::vector<float> ratioMap;
+    float inRPM = 0;
+    float outRPM = 0;
 
 public:
-    GearBox(const std::vector<int>&);
-    GearBox(const GearBox&&);
+    GearBox(std::vector<float>&&);
+    GearBox(GearBox&&);
     GearBox(const GearBox&) = delete;
 
-    float calculateRPM(const float&, const float&) const;
+    void setInRPM(const float&);
+    void setOutRPM(const float&);
+
+    float calculateInRPM(const float&, const float&) const;
+    float calculateOutRPM() const;
 };
 
 /************************************
@@ -83,7 +89,7 @@ class Car {
 private:
     std::string name;
     int mass;
-    float velocity;
+    float velocity = 0;
     float surfaceArea;
 
     Position position;
@@ -93,9 +99,9 @@ private:
     const Atmosphere* atmospherePtr;
 
 public:
-    Car(const char*, const int&, const float&, const float&, const Position&, const Engine&,
-        const GearBox&, const TyreSet&, const Atmosphere* const);
-    Car(const Car&&);
+    Car(const char*, const int&, const float&, const Position&, Engine&&,
+        GearBox&&, TyreSet&&, const Atmosphere* const);
+    Car(Car&&);
     Car(const Car&) = delete;
 
     float calculateCurrentVelocity(const float&);

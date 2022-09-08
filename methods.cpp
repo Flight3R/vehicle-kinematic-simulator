@@ -11,9 +11,10 @@ T interpolate(T x0, T y0, T x1, T y1, T x)
 /************************************
  *          Class Engine
  ************************************/
-Engine::Engine(const int& RPM, const int& minRPM, const int& maxRPM, const std::vector<float>& torqueMap)
+Engine::Engine(const int& RPM, const int& minRPM, const int& maxRPM, std::vector<float>&& torqueMap)
     :RPM(RPM), minRPM(minRPM), maxRPM(maxRPM), torqueMap(std::move(torqueMap))
 {
+    this->RPM = RPM >= minRPM ? RPM : minRPM;
 }
 
 Engine::Engine(const Engine&& other)
@@ -58,19 +59,34 @@ void Position::setRange(const float& range)
 /************************************
  *          Class GearBox
  ************************************/
-GearBox::GearBox(const std::vector<int>& ratioMap)
+GearBox::GearBox(std::vector<float>&& ratioMap)
     :ratioMap(std::move(ratioMap))
 {
 }
 
-GearBox::GearBox(const GearBox&& other)
+GearBox::GearBox(GearBox&& other)
     :ratioMap(std::move(other.ratioMap))
 {
 }
 
-float GearBox::calculateRPM(const float& velocity, const float& diameter) const
+void GearBox::setInRPM(const float& inRPM)
+{
+    this->inRPM = inRPM;
+}
+
+void GearBox::setOutRPM(const float& outRPM)
+{
+    this->outRPM = outRPM;
+}
+
+float GearBox::calculateInRPM(const float& velocity, const float& diameter) const
 {
     return velocity / diameter / M_PI;
+}
+
+float GearBox::calculateOutRPM() const
+{
+    return 0.0;
 }
 
 /************************************
@@ -97,15 +113,15 @@ float Atmosphere::calculateDrag(const float& velocity, const float& surfaceArea)
 /************************************
  *          Class Car
  ************************************/
-Car::Car(const char* name, const int& mass, const float& velocity, const float& surfaceArea, const Position& position,
-         const Engine& engine, const GearBox& gearBox, const TyreSet& tyreSet, const Atmosphere* const atmospherePtr)
-    :name(name), mass(mass), velocity(velocity), surfaceArea(surfaceArea), position(std::move(position)),
+Car::Car(const char* name, const int& mass, const float& surfaceArea, const Position& position,
+         Engine&& engine,  GearBox&& gearBox, TyreSet&& tyreSet, const Atmosphere* const atmospherePtr)
+    :name(name), mass(mass), surfaceArea(surfaceArea), position(position),
         engine(std::move(engine)), gearBox(std::move(gearBox)), tyreSet(std::move(tyreSet)),
         atmospherePtr(atmospherePtr)
 {
 }
 
-Car::Car(const Car&& other)
+Car::Car(Car&& other)
     :name(std::move(other.name)), mass(other.mass), velocity(other.velocity), surfaceArea(other.surfaceArea), position(std::move(other.position)),
         engine(std::move(other.engine)), gearBox(std::move(other.gearBox)), tyreSet(std::move(other.tyreSet)),
         atmospherePtr(other.atmospherePtr)
