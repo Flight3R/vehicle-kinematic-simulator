@@ -95,24 +95,9 @@ GearBox::~GearBox()
     std::cout << "Delete GearBox" << std::endl;
 }
 
-void GearBox::setInRPM(const float& inRPM)
+float GearBox::calculateOutRPM(const int& inRPM) const
 {
-    this->inRPM = inRPM;
-}
-
-void GearBox::setOutRPM(const float& outRPM)
-{
-    this->outRPM = outRPM;
-}
-
-float GearBox::calculateInRPM(const float& velocity, const float& diameter) const
-{
-    return velocity / diameter / M_PI;
-}
-
-float GearBox::calculateOutRPM() const
-{
-    return 0.0;
+    
 }
 
 /************************************************************

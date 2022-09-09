@@ -3,16 +3,29 @@
 #include <string>
 
 /************************************************************
+                         Class Rotable
+ ************************************************************/
+class Rotable
+{
+protected:
+    std::vector<float> valueMap;
+public:
+    Rotable(std::vector<float>&&);
+    Rotable(Rotable&&);
+    Rotable(const Rotable&) = delete;
+    ~Rotable();
+
+    virtual float calculateOutValue(const float&) = 0;
+};
+
+/************************************************************
                          Class Engine
  ************************************************************/
-class Engine {
+class Engine : public Rotable
+{
 private:
-    int RPM;
     int minRPM;
     int maxRPM;
-    std::vector<float> torqueMap;
-
-    float interpolateTorque();
 
 public:
     Engine(const int&, const int&, const int&, std::vector<float>&&);
@@ -27,7 +40,8 @@ public:
 /************************************************************
                         Class Position
  ************************************************************/
-class Position {
+class Position
+{
 private:
     float range;
 
@@ -43,29 +57,20 @@ public:
 /************************************************************
                         Class GearBox
  ************************************************************/
-class GearBox {
-private:
-    std::vector<float> ratioMap;
-    float inRPM = 0;
-    float outRPM = 0;
-
+class GearBox : public Rotable
+{
 public:
     GearBox(std::vector<float>&&);
     GearBox(GearBox&&);
     GearBox(const GearBox&) = delete;
     ~GearBox();
-
-    void setInRPM(const float&);
-    void setOutRPM(const float&);
-
-    float calculateInRPM(const float&, const float&) const;
-    float calculateOutRPM() const;
 };
 
 /************************************************************
                         Class TyreSet
  ************************************************************/
-class TyreSet {
+class TyreSet
+{
 private:
     float diameter;
 
@@ -77,7 +82,8 @@ public:
 /************************************************************
                         Class Atmosphere
  ************************************************************/
-class Atmosphere {
+class Atmosphere
+{
 private:
     float airDensity;
 
@@ -91,7 +97,8 @@ public:
 /************************************************************
                         Class Car
  ************************************************************/
-class Car {
+class Car
+{
 private:
     std::string name;
     int mass;
