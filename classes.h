@@ -2,9 +2,9 @@
 #include <vector>
 #include <string>
 
-/************************************
- *          Class Engine
- ************************************/
+/************************************************************
+                         Class Engine
+ ************************************************************/
 class Engine {
 private:
     int RPM;
@@ -16,30 +16,33 @@ private:
 
 public:
     Engine(const int&, const int&, const int&, std::vector<float>&&);
-    Engine(const Engine&&);
+    Engine(Engine&&);
     Engine(const Engine&) = delete;
+    ~Engine();
 
     float calculateCurrentPower();
     float setRPM();
 };
 
-/************************************
- *          Class Position
- ************************************/
+/************************************************************
+                        Class Position
+ ************************************************************/
 class Position {
 private:
     float range;
 
 public:
     Position(const float&);
+    Position(const Position&);
+    ~Position();
 
     float calculatePosition(const float&, const float) const;
     void setRange(const float&);
 };
 
-/************************************
- *          Class GearBox
- ************************************/
+/************************************************************
+                        Class GearBox
+ ************************************************************/
 class GearBox {
 private:
     std::vector<float> ratioMap;
@@ -50,6 +53,7 @@ public:
     GearBox(std::vector<float>&&);
     GearBox(GearBox&&);
     GearBox(const GearBox&) = delete;
+    ~GearBox();
 
     void setInRPM(const float&);
     void setOutRPM(const float&);
@@ -58,33 +62,35 @@ public:
     float calculateOutRPM() const;
 };
 
-/************************************
- *          Class TyreSet
- ************************************/
+/************************************************************
+                        Class TyreSet
+ ************************************************************/
 class TyreSet {
 private:
     float diameter;
 
 public:
     TyreSet(const float&);
+    ~TyreSet();
 };
 
-/************************************
- *          Class Atmosphere
- ************************************/
+/************************************************************
+                        Class Atmosphere
+ ************************************************************/
 class Atmosphere {
 private:
     float airDensity;
 
 public:
     Atmosphere(const float&);
+    ~Atmosphere();
 
     float calculateDrag(const float&, const float&) const;
 };
 
-/************************************
- *          Class Car
- ************************************/
+/************************************************************
+                        Class Car
+ ************************************************************/
 class Car {
 private:
     std::string name;
@@ -103,6 +109,7 @@ public:
         GearBox&&, TyreSet&&, const Atmosphere* const);
     Car(Car&&);
     Car(const Car&) = delete;
+    ~Car();
 
     float calculateCurrentVelocity(const float&);
     void setVelocity(const float&);
