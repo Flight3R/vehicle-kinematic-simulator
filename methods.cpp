@@ -9,17 +9,48 @@ T interpolate(T x0, T y0, T x1, T y1, T x)
 }
 
 /************************************************************
+                        Methods of Rotable
+ ************************************************************/
+Rotable::Rotable(std::vector<float>&& valueMap)
+    :valueMap(std::move(valueMap))
+{
+    std::cout << "Create Rotable" << std::endl;
+}
+
+Rotable::Rotable(Rotable&& other)
+    :valueMap(std::move(other.valueMap))
+{
+    std::cout << "Create Rotable w/m" << std::endl;
+}
+
+Rotable::~Rotable()
+{
+    std::cout << "Delete Rotable" << std::endl;
+}
+
+float Rotable::calculateOutValue(const float& inValue) const
+{
+    int lowPoint = (int)inValue % 100 * 100;
+    int highPoint = lowPoint + 100;
+    return interpolate<float>(lowPoint,
+                              valueMap[(inValue + lowPoint) / 10],
+                              highPoint,
+                              valueMap[(inValue + highPoint) / 10],
+                              (float)inValue) * inValue;
+}
+
+/************************************************************
                         Methods of Engine
  ************************************************************/
 Engine::Engine(const int& RPM, const int& minRPM, const int& maxRPM, std::vector<float>&& torqueMap)
-    :RPM(RPM), minRPM(minRPM), maxRPM(maxRPM), torqueMap(std::move(torqueMap))
+    :Rotable(std::move(torqueMap)), RPM(RPM), minRPM(minRPM), maxRPM(maxRPM)
 {
     this->RPM = RPM >= minRPM ? RPM : minRPM;
     std::cout << "Create Engine" << std::endl;
 }
 
 Engine::Engine(Engine&& other)
-    :RPM(other.RPM), minRPM(other.minRPM), maxRPM(other.maxRPM), torqueMap(std::move(other.torqueMap))
+    :Rotable(std::move(other.valueMap)), RPM(other.RPM), minRPM(other.minRPM), maxRPM(other.maxRPM)
 {
     std::cout << "Create Engine w/m" << std::endl;
 }
@@ -29,20 +60,9 @@ Engine::~Engine()
     std::cout << "Delete Engine" << std::endl;
 }
 
-float Engine::interpolateTorque()
+int Engine::getRPM() const
 {
-    float lowPoint = RPM % 100 * 100;
-    float highPoint = lowPoint + 100;
-    return interpolate<float>(lowPoint,
-                              torqueMap[(RPM + lowPoint) / 10],
-                              highPoint,
-                              torqueMap[(RPM + highPoint) / 10],
-                              (float)RPM);
-}
-
-float Engine::calculateCurrentPower()
-{
-    return interpolateTorque() * RPM;
+    return RPM;
 }
 
 /************************************************************
@@ -79,13 +99,13 @@ void Position::setRange(const float& range)
                         Methods of GearBox
  ************************************************************/
 GearBox::GearBox(std::vector<float>&& ratioMap)
-    :ratioMap(std::move(ratioMap))
+    :Rotable(std::move(ratioMap))
 {
     std::cout << "Create GearBox" << std::endl;
 }
 
 GearBox::GearBox(GearBox&& other)
-    :ratioMap(std::move(other.ratioMap))
+    :Rotable(std::move(other.valueMap))
 {
     std::cout << "Create GearBox w/m" << std::endl;
 }
@@ -93,11 +113,6 @@ GearBox::GearBox(GearBox&& other)
 GearBox::~GearBox()
 {
     std::cout << "Delete GearBox" << std::endl;
-}
-
-float GearBox::calculateOutRPM(const int& inRPM) const
-{
-    
 }
 
 /************************************************************
@@ -160,7 +175,7 @@ Car::~Car()
 
 float Car::calculateCurrentVelocity(const float& timeDelta)
 {
-    float enginePower = engine.calculateCurrentPower();
+    float enginePower = engine.calculateOutValue(engine.getRPM());
     float dragPower = velocity * atmospherePtr->calculateDrag(velocity, surfaceArea);
     float effectivePower = enginePower - dragPower;
     if (effectivePower < 0) {

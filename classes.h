@@ -15,7 +15,7 @@ public:
     Rotable(const Rotable&) = delete;
     ~Rotable();
 
-    virtual float calculateOutValue(const float&) = 0;
+    virtual float calculateOutValue(const float&) const;
 };
 
 /************************************************************
@@ -26,6 +26,7 @@ class Engine : public Rotable
 private:
     int minRPM;
     int maxRPM;
+    int RPM;
 
 public:
     Engine(const int&, const int&, const int&, std::vector<float>&&);
@@ -33,8 +34,8 @@ public:
     Engine(const Engine&) = delete;
     ~Engine();
 
-    float calculateCurrentPower();
     float setRPM();
+    int getRPM() const;
 };
 
 /************************************************************
