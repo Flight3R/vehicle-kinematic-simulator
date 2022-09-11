@@ -8,7 +8,7 @@
 class Rotable
 {
 protected:
-    std::vector<float> valueMap;
+    std::vector<float> m_ValueMap;
 public:
     Rotable(std::vector<float>&&);
     Rotable(Rotable&&);
@@ -24,9 +24,9 @@ public:
 class Engine : public Rotable
 {
 private:
-    int minRPM;
-    int maxRPM;
-    int RPM;
+    int m_MinRPM;
+    int m_MaxRPM;
+    int m_RPM;
 
 public:
     Engine(const int&, const int&, const int&, std::vector<float>&&);
@@ -44,7 +44,7 @@ public:
 class Position
 {
 private:
-    float range;
+    float m_Range;
 
 public:
     Position(const float&);
@@ -73,7 +73,7 @@ public:
 class TyreSet
 {
 private:
-    float diameter;
+    float m_Diameter;
 
 public:
     TyreSet(const float&);
@@ -86,7 +86,7 @@ public:
 class Atmosphere
 {
 private:
-    float airDensity;
+    float m_AirDensity;
 
 public:
     Atmosphere(const float&);
@@ -101,16 +101,16 @@ public:
 class Car
 {
 private:
-    std::string name;
-    int mass;
-    float velocity = 0;
-    float surfaceArea;
+    std::string m_Name;
+    int m_Mass;
+    float m_Velocity = 0;
+    float m_SurfaceArea;
 
-    Position position;
-    Engine engine;
-    GearBox gearBox;
-    TyreSet tyreSet;
-    const Atmosphere* atmospherePtr;
+    Position m_Position;
+    Engine m_Engine;
+    GearBox m_GearBox;
+    TyreSet m_TyreSet;
+    const Atmosphere* m_AtmospherePtr;
 
 public:
     Car(const char*, const int&, const float&, const Position&, Engine&&,

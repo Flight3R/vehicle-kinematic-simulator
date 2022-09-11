@@ -12,13 +12,13 @@ T interpolate(T x0, T y0, T x1, T y1, T x)
                         Methods of Rotable
  ************************************************************/
 Rotable::Rotable(std::vector<float>&& valueMap)
-    :valueMap(std::move(valueMap))
+    :m_ValueMap(std::move(valueMap))
 {
     std::cout << "Create Rotable" << std::endl;
 }
 
 Rotable::Rotable(Rotable&& other)
-    :valueMap(std::move(other.valueMap))
+    :m_ValueMap(std::move(other.m_ValueMap))
 {
     std::cout << "Create Rotable w/m" << std::endl;
 }
@@ -33,9 +33,9 @@ float Rotable::calculateOutValue(const float& inValue) const
     int lowPoint = (int)inValue % 100 * 100;
     int highPoint = lowPoint + 100;
     return interpolate<float>(lowPoint,
-                              valueMap[(inValue + lowPoint) / 10],
+                              m_ValueMap[(inValue + lowPoint) / 10],
                               highPoint,
-                              valueMap[(inValue + highPoint) / 10],
+                              m_ValueMap[(inValue + highPoint) / 10],
                               (float)inValue) * inValue;
 }
 
@@ -43,14 +43,14 @@ float Rotable::calculateOutValue(const float& inValue) const
                         Methods of Engine
  ************************************************************/
 Engine::Engine(const int& RPM, const int& minRPM, const int& maxRPM, std::vector<float>&& torqueMap)
-    :Rotable(std::move(torqueMap)), RPM(RPM), minRPM(minRPM), maxRPM(maxRPM)
+    :Rotable(std::move(torqueMap)), m_RPM(RPM), m_MinRPM(minRPM), m_MaxRPM(maxRPM)
 {
-    this->RPM = RPM >= minRPM ? RPM : minRPM;
+    this->m_RPM = RPM >= minRPM ? RPM : minRPM;
     std::cout << "Create Engine" << std::endl;
 }
 
 Engine::Engine(Engine&& other)
-    :Rotable(std::move(other.valueMap)), RPM(other.RPM), minRPM(other.minRPM), maxRPM(other.maxRPM)
+    :Rotable(std::move(other.m_ValueMap)), m_RPM(other.m_RPM), m_MinRPM(other.m_MinRPM), m_MaxRPM(other.m_MaxRPM)
 {
     std::cout << "Create Engine w/m" << std::endl;
 }
@@ -62,20 +62,20 @@ Engine::~Engine()
 
 int Engine::getRPM() const
 {
-    return RPM;
+    return m_RPM;
 }
 
 /************************************************************
                         Methods of Position
  ************************************************************/
 Position::Position(const float& range)
-    :range(range)
+    :m_Range(range)
 {
     std::cout << "Create Position" << std::endl;
 }
 
 Position::Position(const Position& other)
-    :range(other.range)
+    :m_Range(other.m_Range)
 {
     std::cout << "Create Position w/c" << std::endl;
 }
@@ -87,12 +87,12 @@ Position::~Position()
 
 float Position::calculatePosition(const float& speed, const float timeDelta=0.01) const
 {
-    return range + speed * timeDelta;
+    return m_Range + speed * timeDelta;
 }
 
 void Position::setRange(const float& range)
 {
-    this->range = range;
+    this->m_Range = range;
 }
 
 /************************************************************
@@ -105,7 +105,7 @@ GearBox::GearBox(std::vector<float>&& ratioMap)
 }
 
 GearBox::GearBox(GearBox&& other)
-    :Rotable(std::move(other.valueMap))
+    :Rotable(std::move(other.m_ValueMap))
 {
     std::cout << "Create GearBox w/m" << std::endl;
 }
@@ -119,7 +119,7 @@ GearBox::~GearBox()
                         Methods of TyreSet
  ************************************************************/
 TyreSet::TyreSet(const float& diameter)
-    : diameter(diameter)
+    : m_Diameter(diameter)
 {
     std::cout << "Create TyreSet" << std::endl;
 }
@@ -134,7 +134,7 @@ TyreSet::~TyreSet()
  ************************************************************/
 Atmosphere::Atmosphere(const float& airDensity)
 {
-    this->airDensity = airDensity;
+    this->m_AirDensity = airDensity;
     std::cout << "Create Atmosphere" << std::endl;
 }
 
@@ -145,7 +145,7 @@ Atmosphere::~Atmosphere()
 
 float Atmosphere::calculateDrag(const float& velocity, const float& surfaceArea) const
 {
-    return (airDensity * pow(velocity, 3)) / 2 * surfaceArea;
+    return (m_AirDensity * pow(velocity, 3)) / 2 * surfaceArea;
 }
 
 /************************************************************
@@ -153,17 +153,17 @@ float Atmosphere::calculateDrag(const float& velocity, const float& surfaceArea)
  ************************************************************/
 Car::Car(const char* name, const int& mass, const float& surfaceArea, const Position& position,
          Engine&& engine,  GearBox&& gearBox, TyreSet&& tyreSet, const Atmosphere* const atmospherePtr)
-    :name(name), mass(mass), surfaceArea(surfaceArea), position(position),
-        engine(std::move(engine)), gearBox(std::move(gearBox)), tyreSet(std::move(tyreSet)),
-        atmospherePtr(atmospherePtr)
+    :m_Name(name), m_Mass(mass), m_SurfaceArea(surfaceArea), m_Position(position),
+        m_Engine(std::move(engine)), m_GearBox(std::move(gearBox)), m_TyreSet(std::move(tyreSet)),
+        m_AtmospherePtr(atmospherePtr)
 {
     std::cout << "Create Car" << std::endl;
 }
 
 Car::Car(Car&& other)
-    :name(std::move(other.name)), mass(other.mass), velocity(other.velocity), surfaceArea(other.surfaceArea), position(std::move(other.position)),
-        engine(std::move(other.engine)), gearBox(std::move(other.gearBox)), tyreSet(std::move(other.tyreSet)),
-        atmospherePtr(other.atmospherePtr)
+    :m_Name(std::move(other.m_Name)), m_Mass(other.m_Mass), m_Velocity(other.m_Velocity), m_SurfaceArea(other.m_SurfaceArea), m_Position(std::move(other.m_Position)),
+        m_Engine(std::move(other.m_Engine)), m_GearBox(std::move(other.m_GearBox)), m_TyreSet(std::move(other.m_TyreSet)),
+        m_AtmospherePtr(other.m_AtmospherePtr)
 {
     std::cout << "Create Car w/m" << std::endl;
 }
@@ -175,18 +175,18 @@ Car::~Car()
 
 float Car::calculateCurrentVelocity(const float& timeDelta)
 {
-    float enginePower = engine.calculateOutValue(engine.getRPM());
-    float dragPower = velocity * atmospherePtr->calculateDrag(velocity, surfaceArea);
+    float enginePower = m_Engine.calculateOutValue(m_Engine.getRPM());
+    float dragPower = m_Velocity * m_AtmospherePtr->calculateDrag(m_Velocity, m_SurfaceArea);
     float effectivePower = enginePower - dragPower;
     if (effectivePower < 0) {
-        return velocity;
+        return m_Velocity;
     } else {
-        velocity = sqrt(2*effectivePower * timeDelta / mass + pow(velocity, 2));
-        return velocity;
+        m_Velocity = sqrt(2*effectivePower * timeDelta / m_Mass + pow(m_Velocity, 2));
+        return m_Velocity;
     }
 }
 
 void Car::setVelocity(const float& velocity)
 {
-    this->velocity = velocity;
+    this->m_Velocity = velocity;
 }
